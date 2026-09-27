@@ -2,7 +2,8 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>ランダム和訳クイズ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ランダム翻訳クイズ</title>
   <style>
     :root {
       --bg: #f5f5f5;
@@ -28,51 +29,72 @@
         --shadow: rgba(0,0,0,0.4);
       }
     }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
     body {
       font-family: sans-serif;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      margin: 0;
+      padding: 16px;
       background: var(--bg);
       color: var(--text);
+      touch-action: manipulation;
     }
     #card {
       background: var(--card-bg);
-      padding: 40px 60px;
+      padding: 32px 24px;
       border-radius: 16px;
       box-shadow: 0 4px 20px var(--shadow);
       text-align: center;
-      min-width: 300px;
+      width: 100%;
+      max-width: 420px;
     }
     #question {
-      font-size: 36px;
-      margin-bottom: 30px;
+      font-size: clamp(24px, 8vw, 36px);
+      margin-bottom: 24px;
+      word-break: break-word;
+      min-height: 1.2em;
     }
     #answer {
-      font-size: 32px;
+      font-size: clamp(22px, 7vw, 32px);
       color: var(--answer);
-      height: 45px;
-      margin-bottom: 30px;
+      min-height: 1.4em;
+      margin-bottom: 24px;
+      word-break: break-word;
     }
     #btn {
-      font-size: 18px;
-      padding: 12px 30px;
+      font-size: clamp(16px, 5vw, 18px);
+      padding: 16px 24px;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       background: var(--btn-bg);
       color: var(--btn-text);
       cursor: pointer;
+      width: 100%;
+      font-weight: bold;
+      transition: background 0.15s;
+      user-select: none;
     }
-    #btn:hover {
+    #btn:active {
       background: var(--btn-hover);
+      transform: scale(0.98);
+    }
+    @media (hover: hover) {
+      #btn:hover {
+        background: var(--btn-hover);
+      }
     }
     #hint {
-      margin-top: 20px;
+      margin-top: 16px;
       color: var(--hint);
-      font-size: 14px;
+      font-size: 13px;
     }
   </style>
 </head>
@@ -86,14 +108,12 @@
 
   <script>
     const pairs = [
-      // 英訳問題
       { q: '人々',       a: 'people',    dir: 'en' },
       { q: '作られる',   a: 'made',      dir: 'en' },
       { q: '信じており', a: 'believed',  dir: 'en' },
       { q: 'もう1つ',    a: 'another',   dir: 'en' },
       { q: '習得した',   a: 'learned',   dir: 'en' },
       { q: '人気',       a: 'popular',   dir: 'en' },
-      // 和訳問題
       { q: 'word',       a: '単語',       dir: 'ja' },
       { q: 'originally', a: '元は',       dir: 'ja' },
       { q: 'meant',      a: '意味していた', dir: 'ja' },
