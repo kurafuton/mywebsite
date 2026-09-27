@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ランダム英訳クイズ</title>
+  <style>
+    :root {
+      --bg: #f5f5f5;
+      --card-bg: #ffffff;
+      --text: #222222;
+      --answer: #0070c0;
+      --btn-bg: #0070c0;
+      --btn-hover: #005a9e;
+      --btn-text: #ffffff;
+      --hint: #888888;
+      --shadow: rgba(0,0,0,0.1);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a1a1a;
+        --card-bg: #2a2a2a;
+        --text: #eaeaea;
+        --answer: #4da6ff;
+        --btn-bg: #0a84d6;
+        --btn-hover: #0a6cb0;
+        --btn-text: #ffffff;
+        --hint: #999999;
+        --shadow: rgba(0,0,0,0.5);
+      }
+    }
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+    #card {
+      background: var(--card-bg);
+      padding: 40px 60px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px var(--shadow);
+      text-align: center;
+      min-width: 300px;
+    }
+    #question {
+      font-size: 36px;
+      margin-bottom: 30px;
+    }
+    #answer {
+      font-size: 32px;
+      color: var(--answer);
+      height: 45px;
+      margin-bottom: 30px;
+    }
+    #btn {
+      font-size: 18px;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      cursor: pointer;
+    }
+    #btn:hover {
+      background: var(--btn-hover);
+    }
+    #hint {
+      margin-top: 20px;
+      color: var(--hint);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div id="card">
+    <div id="question"></div>
+    <div id="answer"></div>
+    <button id="btn">答えを表示</button>
+    <div id="hint">スペースキーでも操作できます</div>
+  </div>
+
+  <script>
+    // 英→日 の問題（英文が問題、和訳が答え）
+    const enToJp = [
+      { q: 'people',     a: '人々'     },
+      { q: 'made',       a: '作られる' },
+      { q: 'believed',   a: '信じており' },
+      { q: 'another',    a: 'もう1つ'  },
+      { q: 'learned',    a: '習得した' },
+      { q: 'popular',    a: '人気'     },
+      { q: 'word',       a: '単語'     },
+      { q: 'originally', a: '元は'     },
+      { q: 'meant',      a: '意味していた' },
+      { q: 'ancient',    a: '古代の'   },
+      { q: 'by',         a: 'により'   },
+      { q: 'country',    a: '国'       },
+      { q: 'problem',    a: '問題'     },
+      { q: 'sugar',      a: '砂糖'     },
+      { q: 'century',    a: '世紀'     },
+      { q: 'since',      a: '以来'     },
+      { q: 'without',    a: 'なしで'   },
+      { q: 'also',       a: 'も'       },
+      { q: 'keep',       a: '保存する' },
+      { q: 'main',       a: '主な'     }
+    ];
+
+    // 日→英 の問題（日本語が問題、英訳が答え）
+    const jpToEn = [
+      { q: '人々',     a: 'people'   },
+      { q: '作られる', a: 'made'     },
+      { q: '信じており', a: 'believed' },
+      { q: 'もう1つ',  a: 'another'  },
+      { q: '習得した', a: 'learned'  },
+      { q: '人気',     a: 'popular'  },
+      { q: '単語',     a: 'word'     },
+      { q: '元は',     a: 'originally' },
+      { q: '意味していた', a: 'meant' },
+      { q: '古代の',   a: 'ancient'  },
+      { q: 'により',   a: 'by'       },
+      { q: '国',       a: 'country'  },
+      { q: '問題',     a: 'problem'  },
+      { q: '砂糖',     a: 'sugar'    },
+      { q: '世紀',     a: 'century'  },
+      { q: '以来',     a: 'since'    },
+      { q: 'なしで',   a: 'without'  },
+      { q: 'も',       a: 'also'     },
+      { q: '保存する', a: 'keep'     },
+      { q: '主な',     a: 'main'     }
+    ];
+
+    // 両方向をまとめてシャッフル
+    const allPairs = [...enToJp, ...jpToEn];
+
+    const questionEl = document.getElementById('question');
+    const answerEl   = document.getElementById('answer');
+    const btn        = document.getElementById('btn');
+
+    let remaining = [];
+    let current   = null;
+    let showing   = false;
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function nextQuestion() {
+      if (remaining.length === 0) {
+        questionEl.textContent = '🎉 全問終了！';
+        answerEl.textContent = '';
+        btn.textContent = '最初から';
+        btn.onclick = resetQuiz;
+        showing = false;
+        current = null;
+        return;
+      }
+      const idx = Math.floor(Math.random() * remaining.length);
+      current = remaining.splice(idx, 1)[0];
+      questionEl.textContent = current.q;
+      answerEl.textContent = '';
+      btn.textContent = '答えを表示';
+      showing = false;
+    }
+
+    function showAnswer() {
+      if (!current) return;
+      answerEl.textContent = current.a;
+      btn.textContent = '次の問題へ';
+      showing = true;
+    }
+
+    function handleButton() {
+      if (!current) return;
+      if (showing) {
+        current = null;
+        nextQuestion();
+      } else {
+        showAnswer();
+      }
+    }
+
+    function resetQuiz() {
+      remaining = shuffle([...allPairs]);
+      current = null;
+      showing = false;
+      btn.onclick = handleButton;
+      nextQuestion();
+    }
+
+    btn.onclick = handleButton;
+
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        btn.click();
+      }
+    });
+
+    remaining = shuffle([...allPairs]);
+    nextQuestion();
+  </script>
+</body>
+</html>
