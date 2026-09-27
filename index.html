@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>ランダム英訳クイズ</title>
+  <title>ランダム和訳クイズ</title>
   <style>
     :root {
       --bg: #f5f5f5;
@@ -19,13 +19,13 @@
       :root {
         --bg: #1a1a1a;
         --card-bg: #2a2a2a;
-        --text: #eaeaea;
+        --text: #e8e8e8;
         --answer: #4da6ff;
-        --btn-bg: #0a84d6;
-        --btn-hover: #0a6cb0;
+        --btn-bg: #005a9e;
+        --btn-hover: #0070c0;
         --btn-text: #ffffff;
-        --hint: #999999;
-        --shadow: rgba(0,0,0,0.5);
+        --hint: #888888;
+        --shadow: rgba(0,0,0,0.4);
       }
     }
     body {
@@ -85,72 +85,38 @@
   </div>
 
   <script>
-    // 英→日 の問題（英文が問題、和訳が答え）
-    const enToJp = [
-      { q: 'people',     a: '人々'     },
-      { q: 'made',       a: '作られる' },
-      { q: 'believed',   a: '信じており' },
-      { q: 'another',    a: 'もう1つ'  },
-      { q: 'learned',    a: '習得した' },
-      { q: 'popular',    a: '人気'     },
-      { q: 'word',       a: '単語'     },
-      { q: 'originally', a: '元は'     },
-      { q: 'meant',      a: '意味していた' },
-      { q: 'ancient',    a: '古代の'   },
-      { q: 'by',         a: 'により'   },
-      { q: 'country',    a: '国'       },
-      { q: 'problem',    a: '問題'     },
-      { q: 'sugar',      a: '砂糖'     },
-      { q: 'century',    a: '世紀'     },
-      { q: 'since',      a: '以来'     },
-      { q: 'without',    a: 'なしで'   },
-      { q: 'also',       a: 'も'       },
-      { q: 'keep',       a: '保存する' },
-      { q: 'main',       a: '主な'     }
+    const pairs = [
+      // 英訳問題
+      { q: '人々',       a: 'people',    dir: 'en' },
+      { q: '作られる',   a: 'made',      dir: 'en' },
+      { q: '信じており', a: 'believed',  dir: 'en' },
+      { q: 'もう1つ',    a: 'another',   dir: 'en' },
+      { q: '習得した',   a: 'learned',   dir: 'en' },
+      { q: '人気',       a: 'popular',   dir: 'en' },
+      // 和訳問題
+      { q: 'word',       a: '単語',       dir: 'ja' },
+      { q: 'originally', a: '元は',       dir: 'ja' },
+      { q: 'meant',      a: '意味していた', dir: 'ja' },
+      { q: 'ancient',    a: '古代の',     dir: 'ja' },
+      { q: 'by',         a: 'により',     dir: 'ja' },
+      { q: 'country',    a: '国',         dir: 'ja' },
+      { q: 'problem',    a: '問題',       dir: 'ja' },
+      { q: 'sugar',      a: '砂糖',       dir: 'ja' },
+      { q: 'century',    a: '世紀',       dir: 'ja' },
+      { q: 'since',      a: '以来',       dir: 'ja' },
+      { q: 'without',    a: 'なしで',     dir: 'ja' },
+      { q: 'also',       a: 'も',         dir: 'ja' },
+      { q: 'keep',       a: '保存する',   dir: 'ja' },
+      { q: 'main',       a: '主な',       dir: 'ja' }
     ];
-
-    // 日→英 の問題（日本語が問題、英訳が答え）
-    const jpToEn = [
-      { q: '人々',     a: 'people'   },
-      { q: '作られる', a: 'made'     },
-      { q: '信じており', a: 'believed' },
-      { q: 'もう1つ',  a: 'another'  },
-      { q: '習得した', a: 'learned'  },
-      { q: '人気',     a: 'popular'  },
-      { q: '単語',     a: 'word'     },
-      { q: '元は',     a: 'originally' },
-      { q: '意味していた', a: 'meant' },
-      { q: '古代の',   a: 'ancient'  },
-      { q: 'により',   a: 'by'       },
-      { q: '国',       a: 'country'  },
-      { q: '問題',     a: 'problem'  },
-      { q: '砂糖',     a: 'sugar'    },
-      { q: '世紀',     a: 'century'  },
-      { q: '以来',     a: 'since'    },
-      { q: 'なしで',   a: 'without'  },
-      { q: 'も',       a: 'also'     },
-      { q: '保存する', a: 'keep'     },
-      { q: '主な',     a: 'main'     }
-    ];
-
-    // 両方向をまとめてシャッフル
-    const allPairs = [...enToJp, ...jpToEn];
 
     const questionEl = document.getElementById('question');
     const answerEl   = document.getElementById('answer');
     const btn        = document.getElementById('btn');
 
-    let remaining = [];
+    let remaining = [...pairs];
     let current   = null;
     let showing   = false;
-
-    function shuffle(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
 
     function nextQuestion() {
       if (remaining.length === 0) {
@@ -159,7 +125,6 @@
         btn.textContent = '最初から';
         btn.onclick = resetQuiz;
         showing = false;
-        current = null;
         return;
       }
       const idx = Math.floor(Math.random() * remaining.length);
@@ -188,7 +153,7 @@
     }
 
     function resetQuiz() {
-      remaining = shuffle([...allPairs]);
+      remaining = [...pairs];
       current = null;
       showing = false;
       btn.onclick = handleButton;
@@ -204,7 +169,6 @@
       }
     });
 
-    remaining = shuffle([...allPairs]);
     nextQuestion();
   </script>
 </body>
