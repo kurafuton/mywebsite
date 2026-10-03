@@ -1,195 +1,215 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ランダム翻訳クイズ</title>
-  <style>
-    :root {
-      --bg: #f5f5f5;
-      --card-bg: #ffffff;
-      --text: #222222;
-      --answer: #0070c0;
-      --btn-bg: #0070c0;
-      --btn-hover: #005a9e;
-      --btn-text: #ffffff;
-      --hint: #888888;
-      --shadow: rgba(0,0,0,0.1);
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #1a1a1a;
-        --card-bg: #2a2a2a;
-        --text: #e8e8e8;
-        --answer: #4da6ff;
-        --btn-bg: #005a9e;
-        --btn-hover: #0070c0;
-        --btn-text: #ffffff;
-        --hint: #888888;
-        --shadow: rgba(0,0,0,0.4);
-      }
-    }
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-    html, body {
-      height: 100%;
-      margin: 0;
-    }
-    body {
-      font-family: sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      background: var(--bg);
-      color: var(--text);
-      touch-action: manipulation;
-    }
-    #card {
-      background: var(--card-bg);
-      padding: 32px 24px;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px var(--shadow);
-      text-align: center;
-      width: 100%;
-      max-width: 420px;
-    }
-    #question {
-      font-size: clamp(24px, 8vw, 36px);
-      margin-bottom: 24px;
-      word-break: break-word;
-      min-height: 1.2em;
-    }
-    #answer {
-      font-size: clamp(22px, 7vw, 32px);
-      color: var(--answer);
-      min-height: 1.4em;
-      margin-bottom: 24px;
-      word-break: break-word;
-    }
-    #btn {
-      font-size: clamp(16px, 5vw, 18px);
-      padding: 16px 24px;
-      border: none;
-      border-radius: 12px;
-      background: var(--btn-bg);
-      color: var(--btn-text);
-      cursor: pointer;
-      width: 100%;
-      font-weight: bold;
-      transition: background 0.15s;
-      user-select: none;
-    }
-    #btn:active {
-      background: var(--btn-hover);
-      transform: scale(0.98);
-    }
-    @media (hover: hover) {
-      #btn:hover {
-        background: var(--btn-hover);
-      }
-    }
-    #hint {
-      margin-top: 16px;
-      color: var(--hint);
-      font-size: 13px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=yes">
+<title>単語練習・間違い復習</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#f5f7fb;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:16px}
+.card{background:#fff;width:100%;max-width:600px;border-radius:32px;box-shadow:0 12px 30px rgba(0,0,0,.08);padding:24px 20px 32px}
+h1{font-size:1.3rem;font-weight:600;color:#1e293b;text-align:center;margin-bottom:8px}
+.sub{text-align:center;color:#64748b;font-size:.85rem;margin-bottom:24px;border-bottom:1px solid #e2e8f0;padding-bottom:16px}
+.prompt{background:#f1f5f9;border-radius:24px;padding:32px 16px;margin-bottom:20px;text-align:center;min-height:140px;display:flex;flex-direction:column;justify-content:center;word-break:break-word}
+.prompt-label{font-size:.8rem;text-transform:uppercase;letter-spacing:2px;color:#3b82f6;font-weight:600;margin-bottom:8px}
+.prompt-word{font-size:2.2rem;font-weight:700;color:#0f172a;line-height:1.3}
+.answer-area{background:#fff;border:2px dashed #cbd5e1;border-radius:20px;padding:20px 16px;margin-bottom:24px;text-align:center;min-height:100px;display:flex;flex-direction:column;justify-content:center}
+.answer-label{font-size:.75rem;color:#64748b;letter-spacing:1px;margin-bottom:6px}
+.answer-text{font-size:1.8rem;font-weight:600;color:#0f172a;word-break:break-word;line-height:1.4}
+.hidden .answer-text{display:none}
+.hidden .answer-text::after{content:"?";display:block;font-size:2.2rem;color:#94a3b8;font-weight:400}
+.btn-group{display:flex;flex-direction:column;gap:12px}
+.btn{border:none;background:#3b82f6;color:#fff;padding:18px 12px;font-size:1.2rem;font-weight:600;border-radius:60px;cursor:pointer;transition:transform .1s;box-shadow:0 4px 10px rgba(59,130,246,.3);display:flex;align-items:center;justify-content:center;gap:8px;-webkit-tap-highlight-color:transparent}
+.btn:active{transform:scale(.97)}
+.btn:disabled{background:#cbd5e1;box-shadow:none;color:#94a3b8;pointer-events:none}
+.btn-restart,.btn-correct{background:#10b981;box-shadow:0 4px 10px rgba(16,185,129,.3)}
+.btn-wrong{background:#ef4444;box-shadow:0 4px 10px rgba(239,68,68,.3)}
+.choice-group{display:flex;gap:12px;margin-top:4px}
+.choice-group .btn{flex:1}
+.progress{text-align:center;font-size:.85rem;color:#64748b;margin-top:20px;display:flex;justify-content:space-between;align-items:center;padding:0 4px}
+.badge{background:#e2e8f0;padding:6px 12px;border-radius:40px;font-weight:500;color:#334155}
+.space-hint{font-size:.75rem;color:#94a3b8;background:#f8fafc;padding:4px 10px;border-radius:30px;display:inline-block}
+.round-info{text-align:center;font-size:.85rem;color:#3b82f6;font-weight:600;margin-bottom:8px}
+@media(max-width:420px){.card{padding:20px 16px 24px}.prompt-word{font-size:1.8rem}.answer-text{font-size:1.5rem}.btn{font-size:1rem;padding:16px 12px}}
+</style>
 </head>
 <body>
-  <div id="card">
-    <div id="question"></div>
-    <div id="answer"></div>
-    <button id="btn">答えを表示</button>
-    <div id="hint">スペースキーでも操作できます</div>
-  </div>
-
-  <script>
-    const pairs = [
-      { q: '人々',       a: 'people',    dir: 'en' },
-      { q: '作られる',   a: 'made',      dir: 'en' },
-      { q: '信じており', a: 'believed',  dir: 'en' },
-      { q: 'もう1つ',    a: 'another',   dir: 'en' },
-      { q: '習得した',   a: 'learned',   dir: 'en' },
-      { q: '人気',       a: 'popular',   dir: 'en' },
-      { q: 'word',       a: '単語',       dir: 'ja' },
-      { q: 'originally', a: '元は',       dir: 'ja' },
-      { q: 'meant',      a: '意味していた', dir: 'ja' },
-      { q: 'ancient',    a: '古代の',     dir: 'ja' },
-      { q: 'by',         a: 'により',     dir: 'ja' },
-      { q: 'country',    a: '国',         dir: 'ja' },
-      { q: 'problem',    a: '問題',       dir: 'ja' },
-      { q: 'sugar',      a: '砂糖',       dir: 'ja' },
-      { q: 'century',    a: '世紀',       dir: 'ja' },
-      { q: 'since',      a: '以来',       dir: 'ja' },
-      { q: 'without',    a: 'なしで',     dir: 'ja' },
-      { q: 'also',       a: 'も',         dir: 'ja' },
-      { q: 'keep',       a: '保存する',   dir: 'ja' },
-      { q: 'main',       a: '主な',       dir: 'ja' }
-    ];
-
-    const questionEl = document.getElementById('question');
-    const answerEl   = document.getElementById('answer');
-    const btn        = document.getElementById('btn');
-
-    let remaining = [...pairs];
-    let current   = null;
-    let showing   = false;
-
-    function nextQuestion() {
-      if (remaining.length === 0) {
-        questionEl.textContent = '🎉 全問終了！';
-        answerEl.textContent = '';
-        btn.textContent = '最初から';
-        btn.onclick = resetQuiz;
-        showing = false;
-        return;
-      }
-      const idx = Math.floor(Math.random() * remaining.length);
-      current = remaining.splice(idx, 1)[0];
-      questionEl.textContent = current.q;
-      answerEl.textContent = '';
-      btn.textContent = '答えを表示';
-      showing = false;
-    }
-
-    function showAnswer() {
-      if (!current) return;
-      answerEl.textContent = current.a;
-      btn.textContent = '次の問題へ';
-      showing = true;
-    }
-
-    function handleButton() {
-      if (!current) return;
-      if (showing) {
-        current = null;
-        nextQuestion();
-      } else {
-        showAnswer();
-      }
-    }
-
-    function resetQuiz() {
-      remaining = [...pairs];
-      current = null;
-      showing = false;
-      btn.onclick = handleButton;
-      nextQuestion();
-    }
-
-    btn.onclick = handleButton;
-
-    document.addEventListener('keydown', (e) => {
-      if (e.code === 'Space') {
-        e.preventDefault();
-        btn.click();
-      }
-    });
-
-    nextQuestion();
-  </script>
+<div class="card">
+<h1>📚 単語練習・間違い復習</h1>
+<div class="sub">英→日 / 日→英 ランダム</div>
+<div class="round-info" id="roundInfo">1周目</div>
+<div class="prompt">
+<div class="prompt-label" id="promptLabel">英語</div>
+<div class="prompt-word" id="promptWord">読み込み中...</div>
+</div>
+<div class="answer-area hidden" id="answerArea">
+<div class="answer-label">答え</div>
+<div class="answer-text" id="answerText"></div>
+</div>
+<div class="btn-group" id="btnGroup">
+<button class="btn" id="actionBtn">🔍 答えを表示 <span style="font-size:.8rem;opacity:.8">(スペース)</span></button>
+<div class="choice-group" id="choiceGroup" style="display:none">
+<button class="btn btn-correct" id="correctBtn">⭕ 正解</button>
+<button class="btn btn-wrong" id="wrongBtn">❌ 間違い</button>
+</div>
+</div>
+<div class="progress">
+<span class="badge" id="progressBadge">0 / 0</span>
+<span class="space-hint">␣ スペースキーで操作</span>
+</div>
+</div>
+<script>
+(function(){
+var pairs=[
+["won","winの過去形・過去分詞"],
+["win","《賞・勝利など》～を勝ち取る"],
+["No thanks.","結構です，ありがとう。"],
+["I've","I haveの短縮形"],
+["already","すでに"],
+["full","（～で）いっぱいの，満腹した"],
+["bake","《パンなど》～を焼く"],
+["pie","パイ"],
+["dessert","デザート"],
+["help oneself to","～を自由に取って食べる〔飲む〕"],
+["yourself","あなた自身"],
+["written","writeの過去分詞"],
+["essay","作文，エッセイ"],
+["haven't","have notの短縮形"],
+["hasn't","has notの短縮形"],
+["been","beの過去分詞"],
+["ever","《疑問文で》今までに，かつて"],
+["dancer","踊る人，ダンサー"],
+["abroad","外国に〔へ〕，海外に〔へ〕"],
+["gone","goの過去分詞"],
+["since","～以来，～から"],
+["for a long time","長い間"],
+["perfect","完全な，申し分のない"],
+["each other","お互い"],
+["stadium","競技場，スタジアム"],
+["competition","競技（会）"],
+["we've","we haveの短縮形"],
+["garage","ガレージ，車庫"],
+["clean up","～をきれいに（掃除）する，片付ける"],
+["Good luck!","幸運を祈ります"],
+["poster","ポスター"],
+["Go for it!","がんばって！"],
+["social media","ソーシャルメディア"],
+["typical","典型的な"],
+["thrown","throwの過去分詞"],
+["total","合計の"],
+["kilogram","キログラム《重さの単位》"],
+["industry","産業"],
+["rest","残り"],
+["home","家庭"],
+["owner","持ち主，所有者，オーナー"],
+["customer","客，顧客"],
+["avoid","～を避ける"],
+["major","主要な，大手の，重大な"],
+["discount","割引，値引き"],
+["in addition","その上，さらに加えて"],
+["various","さまざまな，多様な"],
+["inform","～に知らせる，伝える"],
+["situation","状況，事態"],
+["mobile app","モバイルアプリケーション"],
+["provide","～を供給する"],
+["in need","困っている"],
+["increase","～を増やす"],
+["pick-up","《荷物などを》行って受け取ること，集荷"],
+["location","場所"],
+["system","方式，制度"],
+["at any time","いつでも"],
+["nearby","近くの"],
+["police station","警察署"],
+["goal","目標"],
+["support","～を支援する，支える"],
+["post","《ウェブ上に》～を投稿する，アップする"],
+["Germany","ドイツ"],
+["Italy","イタリア"],
+["Russia","ロシア"],
+["New Zealand","ニュージーランド"],
+["matter","困ったこと，問題"],
+["What's the matter with you?","どうかしましたか"],
+["glove","手袋"],
+["wallet","札入れ，財布"]
+];
+var all=[];
+pairs.forEach(function(p){
+all.push({p:p[0],a:p[1],l:'英語 → 日本語'});
+all.push({p:p[1],a:p[0],l:'日本語 → 英語'});
+});
+function sh(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+var round=1,wrong=[],queue=[],cur=null,rem=0,tot=0,shown=false,fin=false;
+var $=function(id){return document.getElementById(id)};
+var pLabel=$('promptLabel'),pWord=$('promptWord'),aArea=$('answerArea'),aText=$('answerText'),
+actBtn=$('actionBtn'),okBtn=$('correctBtn'),ngBtn=$('wrongBtn'),chGroup=$('choiceGroup'),
+badge=$('progressBadge'),btnGroup=$('btnGroup'),rInfo=$('roundInfo');
+function updProg(){badge.textContent=(tot-rem)+' / '+tot}
+function updRound(){rInfo.textContent=round===1?'1周目（全単語）':round+'周目（間違い復習: '+tot+'問）'}
+function start1(){round=1;wrong=[];queue=sh(all.slice());rem=queue.length;tot=all.length;updRound();load()}
+function nextRound(){
+if(!wrong.length){finish();return}
+round++;queue=sh(wrong.slice());rem=queue.length;tot=wrong.length;wrong=[];updRound();load()
+}
+function finish(){
+fin=true;cur=null;pLabel.textContent='完了';pWord.textContent='🎉 すべての問題を終えました';
+aArea.classList.add('hidden');aText.textContent='';actBtn.disabled=true;actBtn.style.display='none';chGroup.style.display='none';
+var rb=document.getElementById('restartBtn');
+if(!rb){rb=document.createElement('button');rb.id='restartBtn';rb.className='btn btn-restart';
+rb.innerHTML='🔄 最初から <span style="font-size:.8rem;opacity:.8">(スペース)</span>';
+rb.addEventListener('click',restart);btnGroup.appendChild(rb)}
+rb.style.display='flex';updProg()
+}
+function load(){
+if(!queue.length){
+if(round===1){wrong.length?nextRound():finish()}
+else{wrong.length?nextRound():finish()}
+return
+}
+cur=queue.shift();rem=queue.length;shown=false;fin=false;
+pLabel.textContent=cur.l;pWord.textContent=cur.p;aArea.classList.add('hidden');aText.textContent=cur.a;
+actBtn.disabled=false;actBtn.style.display='flex';
+actBtn.innerHTML='🔍 答えを表示 <span style="font-size:.8rem;opacity:.8">(スペース)</span>';
+chGroup.style.display='none';
+var rb=document.getElementById('restartBtn');if(rb)rb.style.display='none';
+updProg()
+}
+function show(){
+if(!cur||shown||fin)return;
+shown=true;aArea.classList.remove('hidden');actBtn.style.display='none';chGroup.style.display='flex'
+}
+function record(ok){
+if(!cur||!shown||fin)return;
+if(!ok&&!wrong.some(function(q){return q.p===cur.p&&q.a===cur.a}))wrong.push(cur);
+if(queue.length){load()}
+else{
+if(round===1){wrong.length?nextRound():finish()}
+else{wrong.length?nextRound():finish()}
+}
+}
+function restart(){
+var rb=document.getElementById('restartBtn');if(rb)rb.style.display='none';
+actBtn.style.display='flex';actBtn.disabled=false;chGroup.style.display='none';
+start1()
+}
+function actClick(){
+if(fin){restart();return}
+if(!cur){load();return}
+if(!shown)show()
+}
+function keydown(e){
+if(e.code==='Space'||e.key===' '||e.key==='Spacebar'){
+e.preventDefault();
+if(fin){restart();return}
+if(!cur)return;
+if(!shown)show();else record(true)
+}
+}
+actBtn.addEventListener('click',actClick);
+okBtn.addEventListener('click',function(){record(true)});
+ngBtn.addEventListener('click',function(){record(false)});
+window.addEventListener('keydown',keydown);
+start1()
+})();
+</script>
 </body>
 </html>
