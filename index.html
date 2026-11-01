@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=yes">
-<title>単語練習・間違い復習</title>
+<title>単語練習</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,sans-serif;background:#f5f7fb;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:16px}
@@ -35,7 +35,7 @@ h1{font-size:1.3rem;font-weight:600;color:#1e293b;text-align:center;margin-botto
 </head>
 <body>
 <div class="card">
-<h1>📚 単語練習・間違い復習</h1>
+<h1>英単語練習</h1>
 <div class="sub">英→日 / 日→英 ランダム</div>
 <div class="round-info" id="roundInfo">1周目</div>
 <div class="prompt">
@@ -61,76 +61,22 @@ h1{font-size:1.3rem;font-weight:600;color:#1e293b;text-align:center;margin-botto
 <script>
 (function(){
 var pairs=[
-["won","winの過去形・過去分詞"],
-["win","《賞・勝利など》～を勝ち取る"],
-["No thanks.","結構です，ありがとう。"],
-["I've","I haveの短縮形"],
-["already","すでに"],
-["full","（～で）いっぱいの，満腹した"],
-["bake","《パンなど》～を焼く"],
-["pie","パイ"],
-["dessert","デザート"],
-["help oneself to","～を自由に取って食べる〔飲む〕"],
-["yourself","あなた自身"],
-["written","writeの過去分詞"],
-["essay","作文，エッセイ"],
-["haven't","have notの短縮形"],
-["hasn't","has notの短縮形"],
-["been","beの過去分詞"],
-["ever","《疑問文で》今までに，かつて"],
-["dancer","踊る人，ダンサー"],
-["abroad","外国に〔へ〕，海外に〔へ〕"],
-["gone","goの過去分詞"],
-["since","～以来，～から"],
-["for a long time","長い間"],
-["perfect","完全な，申し分のない"],
-["each other","お互い"],
-["stadium","競技場，スタジアム"],
-["competition","競技（会）"],
-["we've","we haveの短縮形"],
-["garage","ガレージ，車庫"],
-["clean up","～をきれいに（掃除）する，片付ける"],
-["Good luck!","幸運を祈ります"],
-["poster","ポスター"],
-["Go for it!","がんばって！"],
-["social media","ソーシャルメディア"],
-["typical","典型的な"],
-["thrown","throwの過去分詞"],
-["total","合計の"],
-["kilogram","キログラム《重さの単位》"],
-["industry","産業"],
-["rest","残り"],
-["home","家庭"],
-["owner","持ち主，所有者，オーナー"],
-["customer","客，顧客"],
-["avoid","～を避ける"],
-["major","主要な，大手の，重大な"],
-["discount","割引，値引き"],
-["in addition","その上，さらに加えて"],
-["various","さまざまな，多様な"],
-["inform","～に知らせる，伝える"],
-["situation","状況，事態"],
-["mobile app","モバイルアプリケーション"],
-["provide","～を供給する"],
-["in need","困っている"],
-["increase","～を増やす"],
-["pick-up","《荷物などを》行って受け取ること，集荷"],
-["location","場所"],
-["system","方式，制度"],
-["at any time","いつでも"],
-["nearby","近くの"],
-["police station","警察署"],
-["goal","目標"],
-["support","～を支援する，支える"],
-["post","《ウェブ上に》～を投稿する，アップする"],
-["Germany","ドイツ"],
-["Italy","イタリア"],
-["Russia","ロシア"],
-["New Zealand","ニュージーランド"],
-["matter","困ったこと，問題"],
-["What's the matter with you?","どうかしましたか"],
-["glove","手袋"],
-["wallet","札入れ，財布"]
+["bird","鳥"],
+["both","両方"],
+["travels","行く"],
+["fall","秋"],
+["question","質問"],
+["if","ならば"],
+["insects","昆虫"],
+["grass","草"],
+["forward","前方へ"],
+["wings","翼"],
+["distances","距離"],
+["thousand","千"],
+["per","につき"],
+["may","かもしれない"],
+["afraid","怖がる"],
+["bill","くちばし"]
 ];
 var all=[];
 pairs.forEach(function(p){
