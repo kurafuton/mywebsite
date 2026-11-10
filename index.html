@@ -60,58 +60,31 @@ h1{font-size:1.3rem;font-weight:600;color:#1e293b;text-align:center;margin-botto
 </div>
 <script>
 (function(){
-var pairs=[
-["phone","電話"],
-["trust","～を信用する"],
-["whole","まるまるの、全体の、すべての"],
-["crazy","《be crazy about ～》～に夢中である、熱中している"],
-["audience","聴衆，観客"],
-["police","警察，警官隊"],
-["hard","熱心な、勤勉な、大変な"],
-["air","空気，大気"],
-["dish","《皿に盛った》料理"],
-["let","《let+•+原形不定詞で》～に（自由に）…させる"],
-["Let me see.","ええと、そうねえ"],
-["other","もう一方、残り"],
-["take","～を選ぶ、《選んで》～に決める、～を買う"],
-["leave","～を置き忘れる"],
-["somewhere","どこかで，どこかへ"],
-["another","別のもの〔人］"],
-["male","《女性に対して》男性、《動物の》雄"],
-["female","《男性に対して》女性、《動物の》雌"],
-["celebrate","～を祝う"],
-["thank","～に感謝する、礼を言う"],
-["each","それぞれ、めいめい"],
-["myself","私自身"],
-["himself","彼自身"],
-["yourselves","あなたたち自身"],
-["itself","それ自身"],
-["make oneself at home","くつろぐ、楽にする"],
-["say to oneself","心の中で思う"],
-["take care of oneself","体に気をつける"],
-["talk to oneself","独り言を言う"],
-["for oneself","独力で、自分のために"],
-["president","会長，社長"],
-["welcome","～を歓迎する"],
-["take part in","～に参加する"],
-["make an effort","努力する"],
-["women","《womanの複数形》女、女性"],
-["professional","プロの"],
-["happen","起こる、生じる"],
-["moment","瞬間，ちょっとの間"],
-["suffer","《困難などで》苦しむ、悩む"],
-["capital","首都"],
-["religion","宗教"],
-["destroy","～を破壊する"],
-["stupid","愚かな"],
-["place","順位，地位"],
-["book","《部屋・座席など》～を予約する"],
-["exchange","～を両替する、交換する"],
-["apply","申し込む"]
-];
 var all=[];
-pairs.forEach(function(p){
+[
+["smile","ほほえんだり"],
+["laugh","笑ったり"],
+["adults","大人"],
+["power","力"],
+["sick","病気"],
+["difficult","困難"],
+["cure","治療する"],
+["month","月"],
+["happening","起きている"],
+["cells","細胞"],
+["are born","生まれている"],
+["experiment","実験"],
+["active","活発"],
+["person","人"]
+].forEach(function(p){
 all.push({p:p[0],a:p[1],l:'英語 → 日本語'});
+});
+[
+["shows","によると"],
+["story","話"],
+["funny","おかしな"],
+["checked","調べた"]
+].forEach(function(p){
 all.push({p:p[1],a:p[0],l:'日本語 → 英語'});
 });
 function sh(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
