@@ -60,31 +60,45 @@ h1{font-size:1.3rem;font-weight:600;color:#1e293b;text-align:center;margin-botto
 </div>
 <script>
 (function(){
+var pairs=[
+["seem","のように思われる、..のように見える、...らしい"],
+["brick","れんが"],
+["Why don't you ...?","…しませんか"],
+["recommend","～を勧める、推薦する"],
+["ability","能力"],
+["jewel","宝石"],
+["how's","how is の短縮形"],
+["awesome","とてもよい、すごい"],
+["run","流れる"],
+["boil","～を煮る、ゆでる"],
+["scramble","《卵》〜をいり卵にする"],
+["ground","地面，土地"],
+["fallen","fallの過去分詞"],
+["fall","落ちる"],
+["figure","図，図解"],
+["drawn","drawの過去分詞"],
+["wake up","～を起こす，目が覚める"],
+["be in love","恋している"],
+["lettuce","レタス"],
+["president","大統領"],
+["men","man の複数形"],
+["flag","旗"],
+["university","大学，総合大学"],
+["medical","医療の"],
+["patient","患者"],
+["service","サービス，貢献"],
+["realize","～に気づく"],
+["solve","《問題など》～を解く、解決する"],
+["overcome","〜に打ち勝つ，克服する"],
+["refrigerator","冷蔵庫"],
+["washing machine","洗濯機"],
+["air conditioner","エアコン"],
+["improve","（〜を）改善する"],
+["waste","～をむだに使う"]
+];
 var all=[];
-[
-["smile","ほほえんだり"],
-["laugh","笑ったり"],
-["adults","大人"],
-["power","力"],
-["sick","病気"],
-["difficult","困難"],
-["cure","治療する"],
-["month","月"],
-["happening","起きている"],
-["cells","細胞"],
-["are born","生まれている"],
-["experiment","実験"],
-["active","活発"],
-["person","人"]
-].forEach(function(p){
+pairs.forEach(function(p){
 all.push({p:p[0],a:p[1],l:'英語 → 日本語'});
-});
-[
-["shows","によると"],
-["story","話"],
-["funny","おかしな"],
-["checked","調べた"]
-].forEach(function(p){
 all.push({p:p[1],a:p[0],l:'日本語 → 英語'});
 });
 function sh(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
