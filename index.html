@@ -2,154 +2,252 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=yes">
-<title>単語練習・間違い復習</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>穴埋めクイズ</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;background:#f5f7fb;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:16px}
-.card{background:#fff;width:100%;max-width:600px;border-radius:32px;box-shadow:0 12px 30px rgba(0,0,0,.08);padding:24px 20px 32px}
-h1{font-size:1.3rem;font-weight:600;color:#1e293b;text-align:center;margin-bottom:8px}
-.sub{text-align:center;color:#64748b;font-size:.85rem;margin-bottom:24px;border-bottom:1px solid #e2e8f0;padding-bottom:16px}
-.prompt{background:#f1f5f9;border-radius:24px;padding:32px 16px;margin-bottom:20px;text-align:center;min-height:140px;display:flex;flex-direction:column;justify-content:center;word-break:break-word}
-.prompt-label{font-size:.8rem;text-transform:uppercase;letter-spacing:2px;color:#3b82f6;font-weight:600;margin-bottom:8px}
-.prompt-word{font-size:2.2rem;font-weight:700;color:#0f172a;line-height:1.3}
-.answer-area{background:#fff;border:2px dashed #cbd5e1;border-radius:20px;padding:20px 16px;margin-bottom:24px;text-align:center;min-height:100px;display:flex;flex-direction:column;justify-content:center}
-.answer-label{font-size:.75rem;color:#64748b;letter-spacing:1px;margin-bottom:6px}
-.answer-text{font-size:1.8rem;font-weight:600;color:#0f172a;word-break:break-word;line-height:1.4}
-.hidden .answer-text{display:none}
-.hidden .answer-text::after{content:"?";display:block;font-size:2.2rem;color:#94a3b8;font-weight:400}
-.btn-group{display:flex;flex-direction:column;gap:12px}
-.btn{border:none;background:#3b82f6;color:#fff;padding:18px 12px;font-size:1.2rem;font-weight:600;border-radius:60px;cursor:pointer;transition:transform .1s;box-shadow:0 4px 10px rgba(59,130,246,.3);display:flex;align-items:center;justify-content:center;gap:8px;-webkit-tap-highlight-color:transparent}
-.btn:active{transform:scale(.97)}
-.btn:disabled{background:#cbd5e1;box-shadow:none;color:#94a3b8;pointer-events:none}
-.btn-restart,.btn-correct{background:#10b981;box-shadow:0 4px 10px rgba(16,185,129,.3)}
-.btn-wrong{background:#ef4444;box-shadow:0 4px 10px rgba(239,68,68,.3)}
-.choice-group{display:flex;gap:12px;margin-top:4px}
-.choice-group .btn{flex:1}
-.progress{text-align:center;font-size:.85rem;color:#64748b;margin-top:20px;display:flex;justify-content:space-between;align-items:center;padding:0 4px}
-.badge{background:#e2e8f0;padding:6px 12px;border-radius:40px;font-weight:500;color:#334155}
-.space-hint{font-size:.75rem;color:#94a3b8;background:#f8fafc;padding:4px 10px;border-radius:30px;display:inline-block}
-.round-info{text-align:center;font-size:.85rem;color:#3b82f6;font-weight:600;margin-bottom:8px}
-@media(max-width:420px){.card{padding:20px 16px 24px}.prompt-word{font-size:1.8rem}.answer-text{font-size:1.5rem}.btn{font-size:1rem;padding:16px 12px}}
+  :root {
+    --bg: #f5f5f5;
+    --card: #ffffff;
+    --text: #222222;
+    --sub: #666666;
+    --accent: #4a90d9;
+    --border: #dddddd;
+    --correct: #2e9e5b;
+    --wrong: #d94a4a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121212;
+      --card: #1e1e1e;
+      --text: #eeeeee;
+      --sub: #aaaaaa;
+      --accent: #6aa9e9;
+      --border: #333333;
+      --correct: #4cc47a;
+      --wrong: #e56b6b;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 16px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  h1 { font-size: 1.2rem; margin: 0 0 12px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .progress { font-size: 0.85rem; color: var(--sub); margin-bottom: 8px; }
+  .question { font-size: 1.05rem; margin-bottom: 12px; }
+  .question .blank { color: var(--accent); font-weight: bold; }
+  .answer {
+    font-size: 1rem;
+    margin: 12px 0;
+    padding: 10px;
+    background: var(--bg);
+    border-radius: 8px;
+    border: 1px dashed var(--border);
+    min-height: 1.6em;
+  }
+  .answer.hidden { display: none; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  button {
+    flex: 1;
+    min-width: 100px;
+    padding: 12px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: var(--accent);
+    color: #fff;
+  }
+  button.ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  button:disabled { opacity: 0.4; cursor: default; }
+  .result { font-weight: bold; margin-top: 10px; }
+  .result.correct { color: var(--correct); }
+  .result.wrong { color: var(--wrong); }
+  .done { text-align: center; }
+  .done button { flex: none; }
 </style>
 </head>
 <body>
-<div class="card">
-<h1>📚 単語練習・間違い復習</h1>
-<div class="sub">英→日 / 日→英 ランダム</div>
-<div class="round-info" id="roundInfo">1周目</div>
-<div class="prompt">
-<div class="prompt-label" id="promptLabel">英語</div>
-<div class="prompt-word" id="promptWord">読み込み中...</div>
-</div>
-<div class="answer-area hidden" id="answerArea">
-<div class="answer-label">答え</div>
-<div class="answer-text" id="answerText"></div>
-</div>
-<div class="btn-group" id="btnGroup">
-<button class="btn" id="actionBtn">🔍 答えを表示 <span style="font-size:.8rem;opacity:.8">(スペース)</span></button>
-<div class="choice-group" id="choiceGroup" style="display:none">
-<button class="btn btn-correct" id="correctBtn">⭕ 正解</button>
-<button class="btn btn-wrong" id="wrongBtn">❌ 間違い</button>
-</div>
-</div>
-<div class="progress">
-<span class="badge" id="progressBadge">0 / 0</span>
-<span class="space-hint">␣ スペースキーで操作</span>
-</div>
+<div class="wrap">
+  <h1>穴埋めクイズ</h1>
+  <div id="app"></div>
 </div>
 <script>
-(function(){
-var pairs=[
-["mind","心"],
-["situation","状況"],
-["important","大切"],
-["examples","例"],
-["sports","スポーツ"],
-["against","対"],
-["stronger","強い"],
-["difficult","厳しい（困難な）"],
-["won","勝った"],
-["life","生活"]
+const data = [
+  {
+    q: "I need a new phone because I lost () () ().",
+    jp: "私には新しい電話が必要です、なぜなら私の古いものをなくしたからです。",
+    a: "my old one"
+  },
+  {
+    q: "When I took my dog for a walk yesterday, () () ().",
+    jp: "昨日、私が犬を散歩に連れて行った時、何も変わったことは起こりませんでした。",
+    a: "nothing strange happened"
+  },
+  {
+    q: "We are looking for a good restaurant () () () () ().",
+    jp: "私たちは友人にすすめられる良いレストランを探しています。",
+    a: "to recommend to our friends"
+  },
+  {
+    q: "We got up early to see the () sun on New Year's Day.",
+    jp: "私たちは元日に日の出を見るために早起きしました。",
+    a: "rising"
+  },
+  {
+    q: "Wash these lettuce leaves () () (), please.",
+    jp: "このレタスの葉を流水で洗ってください。",
+    a: "in running water"
+  },
+  {
+    q: "Which would you like for breakfast, a () () or () eggs?",
+    jp: "朝食にはゆで卵とスクランブルエッグのどちらになさいますか。",
+    a: "boiled egg / scrambled"
+  },
+  {
+    q: "Can you see the two girls there? The girl () () () () is Lisa.",
+    jp: "そこにいる二人の女の子が見えますか。左に座っている女の子がリサです。",
+    a: "sitting on the left"
+  },
+  {
+    q: "I love the meals () () () ().",
+    jp: "私は学校で出される食事が大好きです",
+    a: "served in our school"
+  },
+  {
+    q: "Can everybody see the figure () () () ()?",
+    jp: "皆さんは黒板に描かれた図が見えますか。",
+    a: "drawn on the blackboard"
+  }
 ];
-var all=[];
-pairs.forEach(function(p){
-all.push({p:p[0],a:p[1],l:'英語 → 日本語'});
-all.push({p:p[1],a:p[0],l:'日本語 → 英語'});
-});
-function sh(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
-var round=1,wrong=[],queue=[],cur=null,rem=0,tot=0,shown=false,fin=false;
-var $=function(id){return document.getElementById(id)};
-var pLabel=$('promptLabel'),pWord=$('promptWord'),aArea=$('answerArea'),aText=$('answerText'),
-actBtn=$('actionBtn'),okBtn=$('correctBtn'),ngBtn=$('wrongBtn'),chGroup=$('choiceGroup'),
-badge=$('progressBadge'),btnGroup=$('btnGroup'),rInfo=$('roundInfo');
-function updProg(){badge.textContent=(tot-rem)+' / '+tot}
-function updRound(){rInfo.textContent=round===1?'1周目（全単語）':round+'周目（間違い復習: '+tot+'問）'}
-function start1(){round=1;wrong=[];queue=sh(all.slice());rem=queue.length;tot=all.length;updRound();load()}
-function nextRound(){
-if(!wrong.length){finish();return}
-round++;queue=sh(wrong.slice());rem=queue.length;tot=wrong.length;wrong=[];updRound();load()
+
+let queue = [];
+let index = 0;
+let status = {};
+
+const app = document.getElementById('app');
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
-function finish(){
-fin=true;cur=null;pLabel.textContent='完了';pWord.textContent='🎉 すべての問題を終えました';
-aArea.classList.add('hidden');aText.textContent='';actBtn.disabled=true;actBtn.style.display='none';chGroup.style.display='none';
-var rb=document.getElementById('restartBtn');
-if(!rb){rb=document.createElement('button');rb.id='restartBtn';rb.className='btn btn-restart';
-rb.innerHTML='🔄 最初から <span style="font-size:.8rem;opacity:.8">(スペース)</span>';
-rb.addEventListener('click',restart);btnGroup.appendChild(rb)}
-rb.style.display='flex';updProg()
+
+function start() {
+  status = {};
+  data.forEach((_, i) => { status[i] = null; });
+  queue = shuffle(data.map((_, i) => i));
+  index = 0;
+  render();
 }
-function load(){
-if(!queue.length){
-if(round===1){wrong.length?nextRound():finish()}
-else{wrong.length?nextRound():finish()}
-return
+
+function startRound2() {
+  const wrong = Object.keys(status).filter(k => status[k] === 'wrong');
+  if (wrong.length === 0) {
+    renderDone(true);
+    return;
+  }
+  queue = shuffle(wrong.map(Number));
+  index = 0;
+  render();
 }
-cur=queue.shift();rem=queue.length;shown=false;fin=false;
-pLabel.textContent=cur.l;pWord.textContent=cur.p;aArea.classList.add('hidden');aText.textContent=cur.a;
-actBtn.disabled=false;actBtn.style.display='flex';
-actBtn.innerHTML='🔍 答えを表示 <span style="font-size:.8rem;opacity:.8">(スペース)</span>';
-chGroup.style.display='none';
-var rb=document.getElementById('restartBtn');if(rb)rb.style.display='none';
-updProg()
+
+function render() {
+  if (index >= queue.length) {
+    renderDone(false);
+    return;
+  }
+  const id = queue[index];
+  const item = data[id];
+  app.innerHTML = `
+    <div class="card">
+      <div class="progress">問題 ${index + 1} / ${queue.length}</div>
+      <div class="question">${item.q.replace(/\(\)/g, '<span class="blank">(　)</span>')}</div>
+      <div class="question" style="color:var(--sub);font-size:0.9rem;">${item.jp}</div>
+      <div id="answer" class="answer hidden"></div>
+      <div id="result" class="result"></div>
+      <div class="actions" id="actions">
+        <button id="showBtn">答えを見る</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('showBtn').onclick = () => {
+    const ans = document.getElementById('answer');
+    ans.textContent = item.a;
+    ans.classList.remove('hidden');
+    const actions = document.getElementById('actions');
+    actions.innerHTML = `
+      <button id="okBtn" style="background:var(--correct);">正解</button>
+      <button id="ngBtn" style="background:var(--wrong);">不正解</button>
+    `;
+    document.getElementById('okBtn').onclick = () => judge(id, 'correct');
+    document.getElementById('ngBtn').onclick = () => judge(id, 'wrong');
+  };
 }
-function show(){
-if(!cur||shown||fin)return;
-shown=true;aArea.classList.remove('hidden');actBtn.style.display='none';chGroup.style.display='flex'
+
+function judge(id, verdict) {
+  status[id] = verdict;
+  const res = document.getElementById('result');
+  if (verdict === 'correct') {
+    res.textContent = '正解として記録しました';
+    res.className = 'result correct';
+  } else {
+    res.textContent = '不正解として記録しました';
+    res.className = 'result wrong';
+  }
+  document.getElementById('okBtn').disabled = true;
+  document.getElementById('ngBtn').disabled = true;
+  setTimeout(() => {
+    index++;
+    render();
+  }, 500);
 }
-function record(ok){
-if(!cur||!shown||fin)return;
-if(!ok&&!wrong.some(function(q){return q.p===cur.p&&q.a===cur.a}))wrong.push(cur);
-if(queue.length){load()}
-else{
-if(round===1){wrong.length?nextRound():finish()}
-else{wrong.length?nextRound():finish()}
+
+function renderDone(perfect) {
+  const wrongCount = Object.keys(status).filter(k => status[k] === 'wrong').length;
+  const correctCount = Object.keys(status).filter(k => status[k] === 'correct').length;
+  let msg = '';
+  if (perfect || wrongCount === 0) {
+    msg = '<p>全問正解です！お疲れさまでした。</p>';
+  } else {
+    msg = `<p>1回目の結果：正解 ${correctCount} 問 / 不正解 ${wrongCount} 問</p>
+           <p>2回目は間違えた問題だけを出題します。</p>`;
+  }
+  app.innerHTML = `
+    <div class="card done">
+      ${msg}
+      <div class="actions" style="justify-content:center;margin-top:12px;">
+        ${wrongCount > 0 && !perfect ? '<button id="r2">2回目を始める</button>' : ''}
+        <button id="reset" class="ghost">最初から</button>
+      </div>
+    </div>
+  `;
+  const r2 = document.getElementById('r2');
+  if (r2) r2.onclick = startRound2;
+  document.getElementById('reset').onclick = start;
 }
-}
-function restart(){
-var rb=document.getElementById('restartBtn');if(rb)rb.style.display='none';
-actBtn.style.display='flex';actBtn.disabled=false;chGroup.style.display='none';
-start1()
-}
-function actClick(){
-if(fin){restart();return}
-if(!cur){load();return}
-if(!shown)show()
-}
-function keydown(e){
-if(e.code==='Space'||e.key===' '||e.key==='Spacebar'){
-e.preventDefault();
-if(fin){restart();return}
-if(!cur)return;
-if(!shown)show();else record(true)
-}
-}
-actBtn.addEventListener('click',actClick);
-okBtn.addEventListener('click',function(){record(true)});
-ngBtn.addEventListener('click',function(){record(false)});
-window.addEventListener('keydown',keydown);
-start1()
-})();
+
+start();
 </script>
 </body>
 </html>
